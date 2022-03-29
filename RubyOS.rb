@@ -1,4 +1,4 @@
-# Operating system in Ruby
+# RubyOS 1.0 by etvx86
 puts "RubyOS starting up..."
 def os_start
   require 'colorize'
