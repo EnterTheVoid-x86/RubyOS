@@ -1,6 +1,7 @@
 # RubyOS 2.0, created by etvx86
 puts "RubyOS starting up..."
 def os_start
+  system "gem install colorize fileutils > /dev/null"
   require 'colorize'
   puts "Colors module loaded.".colorize(:green)
   require 'time'
