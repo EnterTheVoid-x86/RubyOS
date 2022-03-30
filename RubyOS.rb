@@ -13,22 +13,31 @@ def os_start
   puts 'day: ' + Time.now.strftime("%A")
   puts 'month: ' + Time.now.strftime("%B")
   puts 'year: ' + Time.now.strftime("%Y")
+  puts "Directory listing:" 
+  system("ls")
+  puts "RubyOS Timestamp is: #{Time.now.to_i}"
   puts "RubyOS started.".colorize(:red)
 end
 
 os_start
 
+$passfile = "rubyos"
+
 def main
-  print "> ".colorize(:red)
+  print " ".colorize(:red)
   input = gets.chomp
   if input == "help"
     help
   elsif input == "exit"
-    exit
+    puts "Exiting..."
+    puts "RubyOS 2.0"
+    passprompt
   elsif input == "date"
     date
   elsif input == "time"
     time
+  elsif input == "timestamp"
+    puts Time.now.to_i
   elsif input == "calculator"
     calculator
   elsif input == "calculator_help"
@@ -87,7 +96,32 @@ def main
     system "mv #{file} #{dest}"
   elsif input == "games"
      games
-  else
+  elsif input == "sysinfo"
+    puts "RubyOS 2.0"
+    # Print the uptime
+    puts "Uptime:"
+    system "bash example_programs/uptime.sh"
+    system('cat /proc/meminfo | grep MemTotal')
+    puts "CPU: #{@cpu}"
+    puts "Network: #{@network}"
+    puts "Storage: #{@storage}"
+    puts "*******           **              
+/**////**         /**       **   **
+/**   /**  **   **/**      //** ** 
+/*******  /**  /**/******   //***  
+/**///**  /**  /**/**///**   /**   
+/**  //** /**  /**/**  /**   **    
+/**   //**//******/******   **     
+//     //  ////// /////    //      
+         *******    ********       
+        **/////**  **//////        
+       **     //**/**              
+      /**      /**/*********       
+      /**      /**////////**       
+      //**     **        /**       
+       //*******   ********        
+        ///////   ////////"
+else
     puts "Command not recognized."
 end
 end
@@ -100,6 +134,7 @@ def help
   puts "calculator - opens the calculator"
   puts "calculator_help - displays help for the calculator"
   puts "print - prints whatever you type, or does simple math"
+  puts "timestamp - prints RubyOS timestanp"
   puts "cls/clear - clears the screen"
   puts "mkdir - creates a directory"
   puts "rmdir - deletes a directory"
@@ -112,6 +147,11 @@ def help
   puts "mv - moves a file"
   puts "games - play some games!"
   puts "linux - opens a bash shell"
+  puts "sysinfo - prints RubyOS sysinfo"
+  puts "---PASSWORD INFO---"
+  puts "Your password is defined in the $passfile variable."
+  puts "You can use this to set a password in the login screen that shows when you type exit into the console."
+  puts "-------------------"
   puts ""
   puts "Commands can be programmed using Ruby Scripts and typing in the Load command."
   puts "Example: load (input file name in next screen)"
@@ -120,6 +160,20 @@ end
 
 def date
   puts "It is #{Time.now.strftime("%A")} the #{Time.now.strftime("%d")} of #{Time.now.strftime("%B")} #{Time.now.strftime("%Y")}."
+end
+
+def passprompt
+  loop do
+    puts "Please enter your password: "
+    passwd = gets.chomp
+    if passwd == $passfile
+      then
+        puts "Welcome to RubyOS."
+        maii
+      else
+        puts 'Wrong password!'
+    end
+end
 end
 
 def time
@@ -136,7 +190,7 @@ def calculator
   if input == "help"
     calculator_help
   elsif input == "exit"
-    exit
+    puts "Exiting..."
   elsif input == "add"
     add
   elsif input == "subtract"
@@ -317,14 +371,22 @@ def rock_paper_scissors
   end #end if statement
 end #end game def
 
-begin
+def maii
+  begin
   loop do
   main
 end
 rescue Interrupt
   retry
 rescue NoMethodError
-  puts "Exiting RubyOS..."
+  puts "Shutting down..."
+  sleep 0.5
   exit 0
+rescue (Errno::ENOENT)
+  puts "An error occurred."
+  retry
 end
+end
+
+maii
 
