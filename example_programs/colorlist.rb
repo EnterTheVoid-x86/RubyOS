@@ -1,0 +1,16 @@
+require 'colorize'
+puts "01".red
+puts "02".green
+puts "03".blue
+puts "04".yellow
+puts "05".magenta
+puts "06".cyan
+puts "07".white
+puts "08".light_red
+puts "09".light_green
+puts "10".light_blue
+puts "11".light_yellow
+puts "12".light_magenta
+puts "13".light_cyan
+puts "14".light_white
+puts "15".light_black
