@@ -224,20 +224,6 @@ def date
   puts "It is #{Time.now.strftime("%A")} the #{Time.now.strftime("%d")} of #{Time.now.strftime("%B")} #{Time.now.strftime("%Y")}."
 end
 
-def passprompt
-  loop do
-    puts "Please enter your password: "
-    passwd = gets.chomp
-    if passwd == $passfile
-      then
-        puts "Welcome to RubyOS."
-        maii
-      else
-        puts 'Wrong password!'
-    end
-end
-end
-
 def time
   puts "It is #{Time.now.strftime("%H:%M:%S")}."
 end
@@ -433,7 +419,6 @@ def rock_paper_scissors
   end #end if statement
 end #end game def
 
-passprompt
 
 def maii
   begin
@@ -441,16 +426,25 @@ def maii
   main
 end
 rescue Interrupt
-  retry
-rescue NoMethodError
-  puts "Shutting down..."
-  sleep 0.5
-  exit 0
-rescue (Errno::ENOENT)
-  puts "An error occurred."
-  retry
+ retry
 end
 end
+
+def passprompt
+  loop do
+    puts "Please enter your password: "
+    passwd = gets.chomp
+    if passwd == $passfile
+      then
+        puts "Welcome to RubyOS."
+        maii
+      else
+        puts 'Wrong password!'
+    end
+end
+end
+
+passprompt
 
 maii
 
