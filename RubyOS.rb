@@ -1,22 +1,24 @@
 # RubyOS 2.0, created by etvx86
 puts "RubyOS starting up..."
+
 def os_start
-  system "gem install colorize fileutils > /dev/null"
-  require 'colorize'
-  puts "Colors module loaded.".colorize(:green)
-  require 'time'
-  puts "Time module loaded.".colorize(:green)
-  require 'fileutils'
-  puts "FileUtils module loaded.".colorize(:green)
-  puts 'date: ' + Time.now.to_s
-  puts 'time: ' + Time.now.strftime("%H:%M:%S")
-  puts 'day: ' + Time.now.strftime("%A")
-  puts 'month: ' + Time.now.strftime("%B")
-  puts 'year: ' + Time.now.strftime("%Y")
-  puts "Directory listing:" 
-  system("ls")
-  puts "RubyOS Timestamp is: #{Time.now.to_i}"
-  puts "RubyOS started.".colorize(:red)
+	sleep 0.5
+  	require 'colorize'
+  	puts "Colors module loaded.".colorize(:green)
+  	require 'time'                 
+  	puts "Time module loaded.".colorize(:green)
+  	require 'fileutils'
+  	puts "FileUtils module loaded.".colorize(:green)
+  	puts 'date: ' + Time.now.to_s
+  	puts 'time: ' + Time.now.strftime("%H:%M:%S")
+  	puts 'day: ' + Time.now.strftime("%A")
+  	puts 'month: ' + Time.now.strftime("%B")
+  	puts 'year: ' + Time.now.strftime("%Y")
+  	puts "Directory listing:" 
+  	system("ls")
+  	puts "RubyOS Timestamp is: #{Time.now.to_i}"
+  	puts "RubyOS started.".colorize(:red)
+  	puts "RubyOS 2.0 Login Prompt"
 end
 
 os_start
@@ -24,13 +26,13 @@ os_start
 $passfile = "rubyos"
 
 def main
-  print " ".colorize(:red)
+  print "> ".colorize(:red)
   input = gets.chomp
   if input == "help"
     help
   elsif input == "exit"
     puts "Exiting..."
-    puts "RubyOS 2.0"
+    puts "RubyOS 2.0 Login Prompt"
     passprompt
   elsif input == "date"
     date
@@ -101,10 +103,10 @@ def main
     # Print the uptime
     puts "Uptime:"
     system "bash example_programs/uptime.sh"
+    puts "Free memory:"
+    system('cat /proc/meminfo | grep MemFree') # Print the free memory
+    puts "Available memory:"
     system('cat /proc/meminfo | grep MemTotal')
-    puts "CPU: #{@cpu}"
-    puts "Network: #{@network}"
-    puts "Storage: #{@storage}"
     puts "*******           **              
 /**////**         /**       **   **
 /**   /**  **   **/**      //** ** 
@@ -163,7 +165,7 @@ def date
 end
 
 def passprompt
-  loop do
+loop do
     puts "Please enter your password: "
     passwd = gets.chomp
     if passwd == $passfile
@@ -173,7 +175,6 @@ def passprompt
       else
         puts 'Wrong password!'
     end
-end
 end
 
 def time
@@ -387,6 +388,7 @@ rescue (Errno::ENOENT)
   retry
 end
 end
+end
+passprompt
 
 maii
-
