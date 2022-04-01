@@ -1,24 +1,44 @@
 # RubyOS 2.0, created by etvx86
-puts "RubyOS starting up..."
+puts "Welcome to RubyOS v2.0"
+puts "Loading modules..."
 def os_start
+  begin
   require 'colorize'
   puts "Colors module loaded.".colorize(:green)
   require 'time'
   puts "Time module loaded.".colorize(:green)
   require 'fileutils'
-  puts "FileUtils module loaded.".colorize(:green)
+  puts "RubyFS: Init filesystem".colorize(:green)
+  puts "RubyFS: Mount /".colorize(:green)
+  puts "RubyFS: Mount /example_programs".colorize(:green)
+  puts "RubyFS: All tasks completed.".colorize(:green)
   puts 'date: ' + Time.now.to_s
   puts 'time: ' + Time.now.strftime("%H:%M:%S")
   puts 'day: ' + Time.now.strftime("%A")
   puts 'month: ' + Time.now.strftime("%B")
   puts 'year: ' + Time.now.strftime("%Y")
-  puts "Directory listing:" 
+  puts "Directory listing:"
   system("ls")
   puts "RubyOS Timestamp is: #{Time.now.to_i}"
   puts "RubyOS started.".colorize(:red)
-  puts "RubyOS 2.0"
+  puts "RubyOS Login Prompt"
 end
-
+rescue LoadError
+  puts "Kernel panic: Required module LoadError"
+  puts "Details below: "
+  print $!.backtrace
+  puts "\nAre you sure you have the required modules installed?"
+  exit
+rescue Interrupt
+  puts "Kernel panic: Interrupt during init"
+  exit
+rescue NoMemoryError
+  puts "Kernel panic: NoMemoryError during init"
+  exit
+rescue NoMethodError
+  puts "Kernel panic: Attempt to use debug key during init".colorize(:red)
+  exit
+end
 os_start
 
 $passfile = "rubyos"
@@ -34,6 +54,8 @@ def main
     passprompt
   elsif input == "date"
     date
+  elsif input == "shutdown"
+    exit
   elsif input == "time"
     time
   elsif input == "timestamp"
@@ -73,7 +95,8 @@ def main
     file = gets.chomp
     system "rm #{file}"
   elsif input == "ls"
-    system "ls"
+    puts "Current directory: #{Dir.pwd}"
+   system "ls"
   elsif input == "cd"
     puts "Enter directory name"
     dir = gets.chomp
@@ -99,6 +122,7 @@ def main
   elsif input == "sysinfo"
     puts "RubyOS 2.0"
     # Print the uptime
+    puts "Kernel version: 2.0_build4.1_-alpha"
     puts "Uptime:"
     system "bash example_programs/uptime.sh"
     puts "Free memory:"
@@ -222,20 +246,6 @@ end
 
 def date
   puts "It is #{Time.now.strftime("%A")} the #{Time.now.strftime("%d")} of #{Time.now.strftime("%B")} #{Time.now.strftime("%Y")}."
-end
-
-def passprompt
-  loop do
-    puts "Please enter your password: "
-    passwd = gets.chomp
-    if passwd == $passfile
-      then
-        puts "Welcome to RubyOS."
-        maii
-      else
-        puts 'Wrong password!'
-    end
-end
 end
 
 def time
@@ -433,7 +443,6 @@ def rock_paper_scissors
   end #end if statement
 end #end game def
 
-passprompt
 
 def maii
   begin
@@ -441,16 +450,30 @@ def maii
   main
 end
 rescue Interrupt
-  retry
+ retry
 rescue NoMethodError
-  puts "Shutting down..."
-  sleep 0.5
-  exit 0
-rescue (Errno::ENOENT)
-  puts "An error occurred."
   retry
+rescue SystemExit
+  puts "Shutting down..."
+  exit
 end
 end
+
+def passprompt
+  loop do
+    puts "Please enter your password: "
+    passwd = gets.chomp
+    if passwd == $passfile
+      then
+        puts "Welcome to RubyOS."
+        maii
+      else
+        puts 'Wrong password!'
+    end
+end
+end
+
+passprompt
 
 maii
 
