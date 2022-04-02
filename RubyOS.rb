@@ -1,4 +1,33 @@
 # RubyOS 2.0, created by etvx86
+
+if RUBY_VERSION < "1.9"
+  puts "RubyOS 2.0 requires Ruby 1.9 or newer."
+  exit
+end
+
+if ARGV[0] == "-i" or ARGV[0] == "--info"
+  puts "RubyOS 2.0, created by etvx86"
+  puts "RubyOS is a simple operating system written in Ruby."
+  puts "RubyOS is a work in progress, and is not yet complete."
+  puts "Bugs and feature requests can be reported at
+  the github repo."
+  puts "Current features: "
+  puts "* Text moving"
+  puts "* Calculator"
+  puts "* Linux shell"
+  puts "* Password protection"
+  puts "* File system"
+  puts "* Command line"
+  puts "* Games"
+  puts "* Programmable commands with Ruby scripts"
+  puts "* Timestamp"
+  puts "* Date"
+  puts "* Time"
+  puts "* Clear screen"
+  puts "* and much more, use help for full list"
+  exit
+end
+
 puts "Welcome to RubyOS v2.0"
 puts "Loading modules..."
 def os_start
@@ -33,14 +62,15 @@ rescue Interrupt
   puts "Kernel panic: Interrupt during init"
   exit
 rescue NoMemoryError
-  puts "Kernel panic: NoMemoryError during init"
+  puts "Kernel panic: zram buffer crash"
   exit
 rescue NoMethodError
-  puts "Kernel panic: Attempt to use debug key during init".colorize(:red)
+  puts "Kernel panic: Attempt to use debug key during init"
   exit
 end
 os_start
 
+#Define password
 $passfile = "rubyos"
 
 def main
@@ -95,7 +125,6 @@ def main
     file = gets.chomp
     system "rm #{file}"
   elsif input == "ls"
-    puts "Current directory: #{Dir.pwd}"
    system "ls"
   elsif input == "cd"
     puts "Enter directory name"
@@ -234,6 +263,8 @@ def help
   puts "games - play some games!"
   puts "linux - opens a bash shell"
   puts "sysinfo - prints RubyOS sysinfo"
+  puts "demo1 - displays a demo of text moving"
+  puts ""
   puts "---PASSWORD INFO---"
   puts "Your password is defined in the $passfile variable."
   puts "You can use this to set a password in the login screen that shows when you type exit into the console."
@@ -444,7 +475,7 @@ def rock_paper_scissors
 end #end game def
 
 
-def maii
+def wrapper
   begin
   loop do
   main
@@ -460,20 +491,28 @@ end
 end
 
 def passprompt
-  loop do
+  begin
+    loop do
     puts "Please enter your password: "
     passwd = gets.chomp
     if passwd == $passfile
       then
         puts "Welcome to RubyOS."
-        maii
+        wrapper
       else
         puts 'Wrong password!'
     end
+end
+rescue Interrupt
+  retry
+rescue NoMethodError
+  retry
+rescue SystemExit
+  exit
 end
 end
 
 passprompt
 
-maii
+wrapper
 
